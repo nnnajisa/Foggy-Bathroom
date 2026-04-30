@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; }
+
+    #name-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .name-box {
+      background: rgba(14,18,26,0.97);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 28px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-family: monospace;
+      color: #fff;
+      min-width: 240px;
+    }
+    .name-box p { margin: 0; font-size: 13px; opacity: 0.6; }
+    #name-input {
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 5px;
+      color: #fff;
+      font-family: monospace;
+      font-size: 14px;
+      outline: none;
+    }
+    #name-input:focus { border-color: rgba(80,160,255,0.6); }
+    #name-submit { align-self: flex-end; }
+
+    #ui {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #fff;
+    }
+
+    button {
+      padding: 6px 14px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-family: monospace;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: left;
+    }
+
+    button.on {
+      background: rgba(80,160,255,0.35);
+      border-color: rgba(80,160,255,0.7);
+    }
+
+    #humidity-label { opacity: 0.6; font-size: 11px; }
+
+   #hint {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.95);
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 20;
+}
+
+    #prompt {
+      display: none;
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 8px 20px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="name-screen">
+    <div class="name-box">
+      <p>enter your name</p>
+      <input id="name-input" type="text" placeholder="guest" maxlength="16" />
+      <button id="name-submit">join →</button>
+    </div>
+  </div>
+
+  <div id="ui">
+    <div id="humidity-label">humidity: 50%</div>
+    <button id="shower-btn">shower: ON</button>
+    <button id="light-btn">light: ON</button>
+  </div>
+
+  <div id="prompt"></div>
+
+  <div id="hint">Shift + drag on mirror to wipe fog</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.172.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.172.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="index.js"></script>
+</body>
+</html>
