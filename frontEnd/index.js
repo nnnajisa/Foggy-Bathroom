@@ -594,37 +594,64 @@ function setupControls() {
   yaw   = e.y;
   pitch = e.x;
 
-  // drag to look
-  myRenderer.domElement.addEventListener("mousedown", (ev) => {
-    isDragging = true; lastMX = ev.clientX; lastMY = ev.clientY;
-  });
-  window.addEventListener("mouseup", () => {
+// make canvas reliably receive pointer events
+myRenderer.domElement.style.touchAction = "none";
+
+myRenderer.domElement.addEventListener("pointerdown", (ev) => {
+  isDragging = true;
+  lastMX = ev.clientX;
+  lastMY = ev.clientY;
+  myRenderer.domElement.setPointerCapture(ev.pointerId);
+});
+
+myRenderer.domElement.addEventListener("pointerup", (ev) => {
+  isDragging = false;
+  lastStrokeUV = null;
+  try {
+    myRenderer.domElement.releasePointerCapture(ev.pointerId);
+  } catch (e) {}
+});
+
+myRenderer.domElement.addEventListener("pointercancel", () => {
   isDragging = false;
   lastStrokeUV = null;
 });
-  window.addEventListener("mousemove", (ev) => {
-    if (!isDragging) return;
 
-    if (keys["Shift"] && fogOverlayMesh) {
-      // Shift + drag → wipe fog on mirror
-      mouse.x =  (ev.clientX / window.innerWidth)  * 2 - 1;
-      mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
-      raycaster.setFromCamera(mouse, camera);
-      const hits = raycaster.intersectObject(fogOverlayMesh);
-      if (hits[0]?.uv) {
-        const data = { uv: { x: hits[0].uv.x, y: hits[0].uv.y }, size: "medium" };
-        paintStroke(data);
-        socket.emit("draw", data);
-      }
-    } else {
-      // normal drag → look around
-      yaw   -= (ev.clientX - lastMX) * 0.003;
-      pitch -= (ev.clientY - lastMY) * 0.003;
-      pitch  = Math.max(-Math.PI/2 + 0.05, Math.min(Math.PI/2 - 0.05, pitch));
-      camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, "YXZ"));
+myRenderer.domElement.addEventListener("pointermove", (ev) => {
+  if (!isDragging) return;
+
+  if (ev.shiftKey && fogOverlayMesh) {
+    mouse.x =  (ev.clientX / window.innerWidth)  * 2 - 1;
+    mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObject(fogOverlayMesh);
+
+    if (hits[0]?.uv) {
+      const data = {
+        uv: { x: hits[0].uv.x, y: hits[0].uv.y },
+        size: "medium"
+      };
+
+      paintStroke(data);
+      if (socket) socket.emit("draw", data);
     }
-    lastMX = ev.clientX; lastMY = ev.clientY;
-  });
+  } else {
+    yaw   -= (ev.clientX - lastMX) * 0.003;
+    pitch -= (ev.clientY - lastMY) * 0.003;
+    pitch  = Math.max(
+      -Math.PI / 2 + 0.05,
+      Math.min(Math.PI / 2 - 0.05, pitch)
+    );
+
+    camera.quaternion.setFromEuler(
+      new THREE.Euler(pitch, yaw, 0, "YXZ")
+    );
+  }
+
+  lastMX = ev.clientX;
+  lastMY = ev.clientY;
+});
 
   // scroll to zoom (move along look direction)
   myRenderer.domElement.addEventListener("wheel", (ev) => {
