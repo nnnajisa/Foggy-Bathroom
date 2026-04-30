@@ -4,8 +4,9 @@ app.use(express.static("frontEnd"));
 app.use("/models", express.static(__dirname));
 
 const http = require("http").createServer(app);
-const server = app.listen(8080);
-console.log("Server running on http://localhost:8080");
+const PORT = process.env.PORT || 8080;
+const server = app.listen(PORT);
+console.log("Server running on port", PORT);
 
 const io = require("socket.io")().listen(server);
 
