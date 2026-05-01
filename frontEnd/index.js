@@ -49,7 +49,7 @@ let fogMap = null;       // Float32Array: per-pixel fog opacity (0=wiped, 1=full
 let fogImageData = null; // pre-allocated ImageData for putImageData
 const mouse     = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
-let lastStrokeUV = null;
+const strokeLastUVs = {}; // per-user last stroke UV — prevents jumps in multiplayer
 
 // ── socket ────────────────────────────────────────────────────────
 function setupMySocket() {
@@ -72,6 +72,9 @@ function setupMySocket() {
 
   socket.on("users", (serverUsers) => {
     syncUsers(serverUsers);
+    for (const id in strokeLastUVs) {
+      if (!serverUsers[id]) delete strokeLastUVs[id];
+    }
   });
 
   socket.on("userMoved", (user) => {
@@ -301,6 +304,7 @@ function buildMirror() {
   // sit just in front of the Reflector so it renders on top
   fogOverlayMesh.position.set(0.9, 2.1, -(HD - 0.07));
   scene.add(fogOverlayMesh);
+
 }
 
 // ── sink ─────────────────────────────────────────────────────────
@@ -429,29 +433,29 @@ function loadHDRI() {
   );
 }
 
-function paintStroke({ uv, size }) {
-  const r = size === "large" ? 10 : size === "small" ? 3 : 5;
+function paintStroke({ uv, size, userId }) {
+  const id = userId || "local";
+  const r  = size === "large" ? 10 : size === "small" ? 3 : 5;
+  const lastUV = strokeLastUVs[id];
 
-  if (lastStrokeUV) {
-    const dx = uv.x - lastStrokeUV.x;
-    const dy = uv.y - lastStrokeUV.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-
-    const steps = Math.max(1, Math.ceil(dist * 1000));
-
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const interpUV = {
-        x: lastStrokeUV.x + dx * t,
-        y: lastStrokeUV.y + dy * t
-      };
-      drawFogEraseDot(interpUV, r);
+  if (lastUV) {
+    const dx = uv.x - lastUV.x;
+    const dy = uv.y - lastUV.y;
+    const d  = Math.sqrt(dx * dx + dy * dy);
+    if (d < 0.15) {
+      const steps = Math.max(1, Math.ceil(d * 1000));
+      for (let i = 0; i <= steps; i++) {
+        const t  = i / steps;
+        drawFogEraseDot({ x: lastUV.x + dx * t, y: lastUV.y + dy * t }, r);
+      }
+    } else {
+      drawFogEraseDot(uv, r);
     }
   } else {
     drawFogEraseDot(uv, r);
   }
 
-  lastStrokeUV = uv;
+  strokeLastUVs[id] = { x: uv.x, y: uv.y };
   if (fogCtx && fogImageData) {
     fogCtx.putImageData(fogImageData, 0, 0);
     fogTexture.needsUpdate = true;
@@ -600,7 +604,7 @@ function setupControls() {
   });
   window.addEventListener("mouseup", () => {
   isDragging = false;
-  lastStrokeUV = null;
+  if (myId) delete strokeLastUVs[myId];
 });
   window.addEventListener("mousemove", (ev) => {
     if (!isDragging) return;
@@ -612,7 +616,7 @@ function setupControls() {
       raycaster.setFromCamera(mouse, camera);
       const hits = raycaster.intersectObject(fogOverlayMesh);
       if (hits[0]?.uv) {
-        const data = { uv: { x: hits[0].uv.x, y: hits[0].uv.y }, size: "medium" };
+        const data = { uv: { x: hits[0].uv.x, y: hits[0].uv.y }, size: "medium", userId: myId };
         paintStroke(data);
         socket.emit("draw", data);
       }
