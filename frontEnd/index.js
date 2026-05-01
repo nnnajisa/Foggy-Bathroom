@@ -212,7 +212,7 @@ function buildWater() {
 
   waterMesh = new THREE.Mesh(geo, waterMat);
 
-  waterMesh.position.set(-2.5, 1.25, -1.99);
+  waterMesh.position.set(-2.5, 1.25, -1.95);
 
   scene.add(waterMesh);
   waterMesh.visible = false;
