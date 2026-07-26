@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Najisa | Portfolio</title>
+  <link rel="icon" type="image/png" href="images/favicon-dark.png"  media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" href="images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <style>
+    html, body { margin: 0; padding: 0; background: #000; color: #fff;
+      font-family: "DM Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; overflow-x: hidden; }
+    body.light-mode { background: #fff; color: #000; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=2">
+</head>
+<body>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="morphAvatar">
+  <div class="morph-imgs">
+    <img class="morph-img morph-img-dark"  src="images/Me-dark.png"  alt="">
+    <img class="morph-img morph-img-light" src="images/Me-light.png" alt="">
+  </div>
+</div>
+
+<!-- ══════════ BACKGROUND LAYERS (from original) ══════════ -->
+<div class="bg-container">
+  <div class="mesh-layer dark-bg"></div>
+  <div class="mesh-layer light-bg"></div>
+</div>
+<canvas id="universe"></canvas>
+<div class="top-container">
+  <div class="top-layer top-dark"></div>
+  <div class="top-layer top-light"></div>
+</div>
+
+<!-- ══════════ LAMP (original structure, uses your image files) ══════════ -->
+<div class="lamp-toggle" id="lampControl">
+  <div class="click-mask" id="clickMask"></div>
+  <div class="layer-part eye-dark"></div>
+  <div class="layer-part eye-light"></div>
+  <div class="line-group">
+    <div class="layer-part line-dark"></div>
+    <div class="layer-part line-light"></div>
+  </div>
+  <div class="han-group">
+    <div class="layer-part han-dark"></div>
+    <div class="layer-part han-light"></div>
+  </div>
+</div>
+
+<!-- ══════════ TOPBAR ══════════ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-lamp-space"></div>
+  <a class="topbar-home" id="topbarHome" href="#home">HOME</a>
+  <div class="topbar-right">
+    <div class="lang-picker" id="langPicker">
+      <button class="lang-current" id="langCurrent">EN</button>
+      <div class="lang-dropdown">
+        <button class="lang-opt" data-lang="en">EN</button>
+        <button class="lang-opt" data-lang="zh">中</button>
+        <button class="lang-opt" data-lang="ja">日</button>
+      </div>
+    </div>
+    <div class="burger-icon" id="burger"><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- ══════════ DRAWER ══════════ -->
+<div class="menu-overlay" id="menuOverlay">
+  <nav class="menu-links">
+    <a href="#work"    class="menu-link" data-i18n="nav-work">WORK</a>
+    <a href="#about"   class="menu-link" data-i18n="nav-about">ABOUT</a>
+    <a href="#contact" class="menu-link" data-i18n="nav-contact">CONTACT</a>
+    <a href="resume.html" class="menu-link" data-i18n="nav-resume">RESUME</a>
+  </nav>
+  <div class="menu-footer"><p data-i18n="menu-sub">From Changsha, China · Interactive Media Arts at NYU</p></div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION: HOME
+════════════════════════════════════════ -->
+<section id="home" class="s-home">
+
+  <h1 class="home-title" data-i18n="home-hi">Najisa (Amber He)</h1>
+
+  <div class="home-center">
+    <!-- Particle glow + avatar -->
+    <div class="avatar-wrap">
+      <div class="avatar-glow"></div>
+      <div class="avatar-particles"></div>
+      <img class="avatar-img avatar-img-dark"  src="images/Me-dark.png"  alt="Najisa">
+      <img class="avatar-img avatar-img-light" src="images/Me-light.png" alt="Najisa">
+    </div>
+
+    <!-- White nav bar -->
+    <nav class="home-nav-bar">
+      <a href="#work"    class="hnb-link" data-i18n="nav-work">WORK</a>
+      <div class="hnb-div"></div>
+      <a href="#about"   class="hnb-link" data-i18n="nav-about">ABOUT</a>
+      <div class="hnb-div"></div>
+      <a href="#contact" class="hnb-link" data-i18n="nav-contact">CONTACT</a>
+      <div class="hnb-div"></div>
+      <a href="resume.html" class="hnb-link" data-i18n="nav-resume">RESUME</a>
+    </nav>
+  </div>
+
+  <div class="scroll-cue" style="display:none">
+    <span data-i18n="scroll-down">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+
+<!-- ════════════ CURTAIN between Home → About ════════════ -->
+<div class="curtain" id="curtain">
+  <div class="curtain-line"></div>
+  <div class="curtain-rope"></div>
+  <div class="curtain-handle"></div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION: ABOUT
+════════════════════════════════════════ -->
+<section id="about" class="s-about">
+  <div class="s-inner">
+
+    <div class="about-layout">
+      <!-- Left: title + photo -->
+      <div class="about-left">
+        <h2 class="s-title reveal" data-i18n="nav-about">ABOUT</h2>
+        <div class="photo-wrap">
+          <div class="photo-frame">
+            <img class="photo-img photo-img-dark"  src="./images/Me-dark.png"  alt="Najisa">
+            <img class="photo-img photo-img-light" src="./images/Me-light.png" alt="Najisa">
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: text -->
+      <div class="about-right">
+        <p class="about-p reveal" style="--delay:0.05s" data-i18n="about-p1">Hi, I'm Amber He, a <strong>digital artist</strong> from Changsha, China, currently studying Interactive Media Arts at NYU Tisch School of the Arts.</p>
+        <p class="about-p reveal" style="--delay:0.2s"  data-i18n="about-p2">I work with creative coding, focusing on front-end web design and interactive experiences.</p>
+        <p class="about-p reveal" style="--delay:0.35s" data-i18n="about-p3">Alongside coding, I use tools like After Effects and Blender to create animation, VFX, and 3D work.</p>
+        <p class="about-p reveal" style="--delay:0.5s"  data-i18n="about-p4">I'm drawn to work that feels slightly uncanny, unpredictable, and a bit out of control.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     SECTION: WORK (selected)
+════════════════════════════════════════ -->
+<section id="work" class="s-work">
+  <div class="s-inner">
+    <h2 class="s-title reveal" data-i18n="nav-work">WORK</h2>
+    <p class="s-sub reveal" style="--delay:0.1s" data-i18n="work-selected">Selected Works</p>
+
+    <div class="sel-grid" id="selGrid"></div>
+
+    <a href="works.html" class="more-link reveal" style="--delay:0.15s">
+      <span data-i18n="more-works">More Works</span>
+      <svg viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.2"><line x1="0" y1="7" x2="18" y2="7"/><polyline points="12 1 18 7 12 13"/></svg>
+    </a>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     SECTION: CONTACT (footer-style)
+════════════════════════════════════════ -->
+<section id="contact" class="s-contact">
+  <div class="s-inner">
+
+    <div class="contact-top">
+      <div class="contact-head">
+        <h2 class="contact-title reveal" data-i18n="nav-contact">Contact</h2>
+        <p class="contact-sub reveal" style="--delay:0.1s" data-i18n="reach-out">reach out!</p>
+      </div>
+
+      <div class="contact-icons">
+        <a href="mailto:jingshan.he@nyu.edu"               class="ci" title="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        </a>
+        <div class="ci phone-picker" id="phonePicker" title="Phone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.1 5.18a2 2 0 012-2.18H8.1a2 2 0 012 1.72 12.05 12.05 0 00.57 2.57 2 2 0 01-.45 2.11L9.1 10.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.05 12.05 0 002.57.57 2 2 0 011.72 2z"/></svg>
+          <div class="phone-dropdown">
+            <a href="tel:+17185305825"   class="phone-opt">US &nbsp;+1 (718) 530-5825</a>
+            <a href="tel:+8618570391373" class="phone-opt">CN &nbsp;+86 185 7039 1373</a>
+          </div>
+        </div>
+        <a href="https://github.com/nnnajisa"    target="_blank" class="ci" title="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/amber-he-57a505336" target="_blank" class="ci" title="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="https://youtube.com/@amberhe-yj8ew?si=rAv6n8gVms0Fb3Am" target="_blank" class="ci" title="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+        </a>
+        <a href="https://instagram.com/yourhandle" target="_blank" class="ci" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </a>
+        <a href="https://line.me/ti/p/yXhPmU-DJD" target="_blank" class="ci" title="Line">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <text x="12" y="15.5" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="9" letter-spacing="1">LINE</text>
+          </svg>
+        </a>
+      </div>
+
+      <a href="#home" class="back-top" id="backTop">
+        <svg viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.3"><polyline points="1 8 7 2 13 8"/></svg>
+        <span data-i18n="back-top">Back to Top</span>
+      </a>
+    </div>
+
+    <!-- Divider -->
+    <hr class="contact-hr">
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-left">
+        <nav class="footer-nav">
+          <a href="#home"       data-i18n="nav-home">HOME</a>
+          <a href="#work"       data-i18n="nav-work">WORK</a>
+          <a href="#about"      data-i18n="nav-about">ABOUT</a>
+          <a href="resume.html" data-i18n="nav-resume">RESUME</a>
+        </nav>
+        <p class="copyright" data-i18n="copyright">© 2026 Najisa. All rights reserved.</p>
+      </div>
+      <!-- Eye logo -->
+      <div class="footer-eye">
+        <img class="feye feye-dark"  src="images/i-dark.png"  alt="">
+        <img class="feye feye-light" src="images/i-light.png" alt="">
+      </div>
+    </footer>
+  </div>
+</section>
+
+
+<!-- ══════════ LIGHTBOX ══════════ -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <span class="lightbox-close" onclick="closeLightbox()">CLOSE ✕</span>
+    <div id="lbMedia" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
+  </div>
+</div>
+
+<script src="js/global.js"></script>
+<script src="js/works-data.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
